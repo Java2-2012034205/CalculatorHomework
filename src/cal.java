@@ -1,5 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -44,5 +46,64 @@ public class cal extends JFrame {
         p.add(plus); p.add(minus);  p.add(bNum[1]); p.add(bNum[2]); p.add(bNum[3]); 
         p.add(mod);   p.add(equal);  p.add(bNum[0]);   
 
+    }
+    class NumberHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String s = e.getActionCommand();
+            if(inputValue == null) {	
+                if( s.equals("0")) 
+                   return ;
+                else inputValue = new String();	
+
+            }
+            if( inputValue.length() >= 9)	  
+               return;
+            inputValue = inputValue + s;  
+            label.setText(inputValue);  
+        }
+    }
+
+
+    class CalcHandler implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JButton source = (JButton)e.getSource();
+            int value;
+            
+            if( source == clear ) {	
+                label.setText("0");
+                inputValue = null;
+                lastOp = 0;
+                result = 0;
+                return ;
+            }
+
+            if( inputValue != null ) {
+		
+                value = Integer.parseInt(inputValue);	
+                switch(lastOp) {	  
+                    case '+': 
+                       result = result + value;
+                       break;
+                    case '-': 
+                       result = result - value;
+                       break;
+                    case '*':
+                       result = result * value;
+                       break;
+                    case '/': 
+                       result = result / value;
+                       break;
+                    case '%':
+                       result = result % value;
+                       break;
+                    default : 
+                       result = value;
+                       break;
+                }
+                label.setText(Integer.toString(result));  
+            }
+            inputValue = null;	
+            lastOp = source.getText().charAt(0);
+        }
     }
 }
